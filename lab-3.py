@@ -10,7 +10,7 @@ s3 = boto3.client('s3')
 def main(argv):
 
     cmd = determine_command(int(sys.argv[1]))
-    log_file_name = datetime.datetime.now().strftime("%m_%d_%Y") + "_logfile"
+    log_file_name = datetime.datetime.utcnow().strftime("%m_%d_%Y") + "_logfile"
     kickoff_subprocess(cmd, log_file_name)
     upload_output_to_S3(log_file_name)
 
@@ -32,7 +32,7 @@ def determine_command(user_input):
 def kickoff_subprocess(cmd, log_file_name):
     process = subprocess.call(cmd, shell=False)
     file = open(log_file_name, "a+")
-    timestamp = datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
+    timestamp = datetime.datetime.utcnow().strftime("%m/%d/%Y, %H:%M:%S")
     output = timestamp + " Command: "+ cmd[0] + " | Return Code: " + str(process) + "\n"
     # context manager https://book.pythontips.com/en/latest/context_managers.html
     with open(log_file_name, 'a+') as file:
@@ -42,7 +42,7 @@ def upload_output_to_S3(log_file_name):
     # context manager https://book.pythontips.com/en/latest/context_managers.html
     with open(log_file_name, 'rb') as opened_file:
         file = open(log_file_name, "rb")
-        s3.upload_fileobj(file, "<FMI1>", log_file_name)
+        s3.upload_fileobj(file, "er-codeguru", log_file_name)
         file.close()
 
 if __name__ == "__main__":
