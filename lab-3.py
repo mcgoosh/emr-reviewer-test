@@ -32,7 +32,7 @@ def determine_command(user_input):
 def kickoff_subprocess(cmd, log_file_name):
     process = subprocess.call(cmd, shell=False)
     file = open(log_file_name, "a+")
-    timestamp = datetime.datetime.utcnow().strftime("%m/%d/%Y, %H:%M:%S")
+    timestamp = datetime.datetime.now(datetime.timezone.utc).strftime("%m/%d/%Y, %H:%M:%S")
     output = timestamp + " Command: "+ cmd[0] + " | Return Code: " + str(process) + "\n"
     # context manager https://book.pythontips.com/en/latest/context_managers.html
     with open(log_file_name, 'a+') as file:
